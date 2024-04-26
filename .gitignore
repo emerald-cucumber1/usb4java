@@ -6,3 +6,4 @@ target
 .vscode
 *.iml
 hs_err_*.log
+.DS_Store

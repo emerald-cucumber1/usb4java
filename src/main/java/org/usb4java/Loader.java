@@ -47,7 +47,7 @@ public final class Loader
     private static String getOS()
     {
         final String os = System.getProperty("os.name").toLowerCase()
-            .replace(" ", "");
+                .replace(" ", "");
         if (os.contains("windows"))
         {
             return "win32";
@@ -91,38 +91,6 @@ public final class Loader
     }
 
     /**
-     * Returns the shared library extension name.
-     *
-     * @return The shared library extension name.
-     */
-    private static String getExt()
-    {
-        final String os = getOS();
-        final String key = "usb4java.libext." + getOS();
-        final String ext = System.getProperty(key);
-        if (ext != null)
-        {
-            return ext;
-        }
-        if (os.equals("linux") || os.equals("freebsd") || os.equals("sunos"))
-        {
-            return "so";
-        }
-        if (os.equals("win32"))
-        {
-            return "dll";
-        }
-        if (os.equals("darwin"))
-        {
-            return "dylib";
-        }
-        throw new LoaderException("Unable to determine the shared library "
-            + "file extension for operating system '" + os
-            + "'. Please specify Java parameter -D" + key
-            + "=<FILE-EXTENSION>");
-    }
-
-    /**
      * Creates the temporary directory used for unpacking the native libraries.
      * This directory is marked for deletion on exit.
      *
@@ -146,7 +114,7 @@ public final class Loader
             if (!tmp.mkdirs())
             {
                 throw new IOException("Unable to create temporary directory "
-                    + tmp);
+                        + tmp);
             }
             tmp.deleteOnExit();
             return tmp;
@@ -154,7 +122,7 @@ public final class Loader
         catch (final IOException e)
         {
             throw new LoaderException("Unable to create temporary directory "
-                + "for usb4java natives: " + e, e);
+                    + "for usb4java natives: " + e, e);
         }
     }
 
@@ -177,20 +145,8 @@ public final class Loader
      */
     private static String getLibName()
     {
-        return "libusb4java." + getExt();
-    }
-
-    /**
-     * Returns the name of the libusb native library. This could be
-     * "libusb0.dll" for example or null if this library is not needed on the
-     * current platform (Because it is provided by the operating system or
-     * statically linked into the libusb4java library).
-     *
-     * @return The libusb native library name or null if not needed.
-     */
-    private static String getExtraLibName()
-    {
-        return null;
+        String libraryName = System.getProperty("usb4java.library.name", "usb4java");
+        return System.mapLibraryName(libraryName);
     }
 
     /**
@@ -204,7 +160,7 @@ public final class Loader
      *             If copying failed.
      */
     private static void copy(final InputStream input, final File output)
-        throws IOException
+            throws IOException
     {
         final byte[] buffer = new byte[BUFFER_SIZE];
         final FileOutputStream stream = new FileOutputStream(output);
@@ -232,19 +188,31 @@ public final class Loader
      * @return The absolute path to the extracted library.
      */
     private static String extractLibrary(final String platform,
-        final String lib)
+                                         final String lib)
     {
+
+        String bootPath = System.getProperty("usb4java.library.path");
+        if (bootPath != null)
+        {
+            File file = new File(bootPath, lib);
+            if (file.exists())
+            {
+                return file.getAbsolutePath();
+            }
+        }
+
+
         // Extract the usb4java library
         final String source = '/'
-            + Loader.class.getPackage().getName().replace('.', '/') + '/'
-            + platform + "/" + lib;
+                + Loader.class.getPackage().getName().replace('.', '/') + '/'
+                + platform + "/" + lib;
 
         // Check if native library is present
         final URL url = Loader.class.getResource(source);
         if (url == null)
         {
             throw new LoaderException("Native library not found in classpath: "
-                + source);
+                    + source);
         }
 
         // If native library was found in an already extracted form then
@@ -272,7 +240,7 @@ public final class Loader
             if (stream == null)
             {
                 throw new LoaderException("Unable to find " + source
-                    + " in the classpath");
+                        + " in the classpath");
             }
             try
             {
@@ -286,7 +254,7 @@ public final class Loader
         catch (final IOException e)
         {
             throw new LoaderException("Unable to extract native library "
-                + source + " to " + dest + ": " + e, e);
+                    + source + " to " + dest + ": " + e, e);
         }
 
         // Mark usb4java library for deletion
@@ -315,11 +283,7 @@ public final class Loader
         loaded = true;
         final String platform = getPlatform();
         final String lib = getLibName();
-        final String extraLib = getExtraLibName();
-        if (extraLib != null)
-        {
-            System.load(extractLibrary(platform, extraLib));
-        }
+
         System.load(extractLibrary(platform, lib));
     }
 }
