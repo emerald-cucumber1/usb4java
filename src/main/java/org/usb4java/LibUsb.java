@@ -933,7 +933,7 @@ public final class LibUsb {
 
     /**
      * Returns the API version of the underlying libusb library. It is defined
-     * as follows: (major << 24) | (minor << 16) | (16 bit incremental)
+     * as follows: (major &lt;&lt; 24) | (minor &lt;&lt; 16) | (16 bit incremental)
      *
      * @return The API version of the underlying libusb library.
      */
@@ -2566,6 +2566,7 @@ public final class LibUsb {
      * This should be called for all pollfd lists allocated with {@link #getPollfds(Context)}.
      * <p>
      * It is legal to call this function with a NULL pollfd list. In this case, the function will simply return safely.
+     * @param pollfds The pollfd list to free.
      */
     public static native void freePollfds(final Pollfds pollfds);
 
