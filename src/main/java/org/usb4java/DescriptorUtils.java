@@ -268,13 +268,18 @@ public final class DescriptorUtils {
      */
     @Contract(pure = true)
     public static @NotNull String getTransferTypeName(final byte bmAttributes) {
-        return switch (bmAttributes & LibUsb.TRANSFER_TYPE_MASK) {
-            case LibUsb.TRANSFER_TYPE_CONTROL -> "Control";
-            case LibUsb.TRANSFER_TYPE_ISOCHRONOUS -> "Isochronous";
-            case LibUsb.TRANSFER_TYPE_BULK -> "Bulk";
-            case LibUsb.TRANSFER_TYPE_INTERRUPT -> "Interrupt";
-            default -> "Unknown";
-        };
+        switch (bmAttributes & LibUsb.TRANSFER_TYPE_MASK) {
+            case LibUsb.TRANSFER_TYPE_CONTROL:
+                return "Control";
+            case LibUsb.TRANSFER_TYPE_ISOCHRONOUS:
+                return "Isochronous";
+            case LibUsb.TRANSFER_TYPE_BULK:
+                return "Bulk";
+            case LibUsb.TRANSFER_TYPE_INTERRUPT:
+                return "Interrupt";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -286,13 +291,18 @@ public final class DescriptorUtils {
      */
     @Contract(pure = true)
     public static @NotNull String getSyncTypeName(final byte bmAttributes) {
-        return switch ((bmAttributes & LibUsb.ISO_SYNC_TYPE_MASK) >> 2) {
-            case LibUsb.ISO_SYNC_TYPE_NONE -> "None";
-            case LibUsb.ISO_SYNC_TYPE_ASYNC -> "Asynchronous";
-            case LibUsb.ISO_SYNC_TYPE_ADAPTIVE -> "Adaptive";
-            case LibUsb.ISO_SYNC_TYPE_SYNC -> "Synchronous";
-            default -> "Unknown";
-        };
+        switch ((bmAttributes & LibUsb.ISO_SYNC_TYPE_MASK) >> 2) {
+            case LibUsb.ISO_SYNC_TYPE_NONE:
+                return "None";
+            case LibUsb.ISO_SYNC_TYPE_ASYNC:
+                return "Asynchronous";
+            case LibUsb.ISO_SYNC_TYPE_ADAPTIVE:
+                return "Adaptive";
+            case LibUsb.ISO_SYNC_TYPE_SYNC:
+                return "Synchronous";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -302,16 +312,20 @@ public final class DescriptorUtils {
      * @return The usage type name.
      */
     @Contract(pure = true)
-    public static @NotNull String getUsageTypeName(final byte bmAttributes) {
-        return switch ((bmAttributes & LibUsb.ISO_USAGE_TYPE_MASK) >> 4) {
-            case LibUsb.ISO_USAGE_TYPE_DATA -> "Data";
-            case LibUsb.ISO_USAGE_TYPE_FEEDBACK -> "Feedback";
-            case LibUsb.ISO_USAGE_TYPE_IMPLICIT -> "Implicit Feedback Data";
-            case 3 ->
+    public static String getUsageTypeName(final byte bmAttributes) {
+        switch ((bmAttributes & LibUsb.ISO_USAGE_TYPE_MASK) >> 4) {
+            case LibUsb.ISO_USAGE_TYPE_DATA:
+                return "Data";
+            case LibUsb.ISO_USAGE_TYPE_FEEDBACK:
+                return "Feedback";
+            case LibUsb.ISO_USAGE_TYPE_IMPLICIT:
+                return "Implicit Feedback Data";
+            case 3:
                 // b11 is considered "Reserved" according to USB 3.0 spec.
-                    "Reserved";
-            default -> "Unknown";
-        };
+                return "Reserved";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -322,13 +336,18 @@ public final class DescriptorUtils {
      */
     @Contract(pure = true)
     public static @NotNull String getSpeedName(final int speed) {
-        return switch (speed) {
-            case LibUsb.SPEED_SUPER -> "Super";
-            case LibUsb.SPEED_FULL -> "Full";
-            case LibUsb.SPEED_HIGH -> "High";
-            case LibUsb.SPEED_LOW -> "Low";
-            default -> "Unknown";
-        };
+        switch (speed) {
+            case LibUsb.SPEED_SUPER:
+                return "Super";
+            case LibUsb.SPEED_FULL:
+                return "Full";
+            case LibUsb.SPEED_HIGH:
+                return "High";
+            case LibUsb.SPEED_LOW:
+                return "Low";
+            default:
+                return "Unknown";
+        }
     }
 
     /**

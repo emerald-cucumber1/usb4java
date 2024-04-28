@@ -3,7 +3,6 @@ package org.usb4java;
 import org.jetbrains.annotations.ApiStatus.AvailableSince;
 import org.jetbrains.annotations.Contract;
 
-import java.io.Serial;
 import java.util.Map;
 
 /**
@@ -27,7 +26,6 @@ final class ImmutablePair<L, R> extends Pair<L, R> {
     /**
      * Serialization version
      */
-    @Serial
     private static final long serialVersionUID = 4954918890077093841L;
     /**
      * Left object

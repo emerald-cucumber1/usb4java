@@ -3,7 +3,6 @@ package org.usb4java;
 import org.jetbrains.annotations.ApiStatus.AvailableSince;
 import org.jetbrains.annotations.Contract;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +28,6 @@ public abstract class Pair<L, R> implements Map.Entry<L, R>, Serializable {
     /**
      * Serialization version
      */
-    @Serial
     private static final long serialVersionUID = 4954918890077093841L;
 
     /**
@@ -77,7 +75,8 @@ public abstract class Pair<L, R> implements Map.Entry<L, R>, Serializable {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof Map.Entry<?, ?> other) {
+        if (obj instanceof Map.Entry<?, ?>) {
+            final Map.Entry<?, ?> other = (Map.Entry<?, ?>) obj;
             return Objects.equals(getKey(), other.getKey()) && Objects.equals(getValue(), other.getValue());
         }
         return false;

@@ -666,7 +666,7 @@ public final class LibUsb {
     public static final byte BT_CONTAINER_ID_SIZE = 20;
 
     /**
-     * We unwrap the BOS => define its maximum size.
+     * We unwrap the BOS =&gt; define its maximum size.
      */
     public static final byte DT_BOS_MAX_SIZE = DT_BOS_SIZE
             + BT_USB_2_0_EXTENSION_SIZE + BT_SS_USB_DEVICE_CAPABILITY_SIZE
