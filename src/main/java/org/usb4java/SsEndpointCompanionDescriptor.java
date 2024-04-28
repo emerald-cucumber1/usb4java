@@ -18,20 +18,23 @@
 
 package org.usb4java;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * A structure representing the superspeed endpoint companion descriptor.
- *
+ * A structure representing the super-speed endpoint companion descriptor.
+ * <p>
  * This descriptor is documented in section 9.6.7 of the USB 3.0 specification.
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class SsEndpointCompanionDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class SsEndpointCompanionDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long ssEndpointCompanionDescriptorPointer;
 
     /**
@@ -40,8 +43,7 @@ public final class SsEndpointCompanionDescriptor
      * EndpointDescriptor, SsEndpointCompanionDescriptor)}
      * method.
      */
-    public SsEndpointCompanionDescriptor()
-    {
+    public SsEndpointCompanionDescriptor() {
         // Empty
     }
 
@@ -50,8 +52,7 @@ public final class SsEndpointCompanionDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.ssEndpointCompanionDescriptorPointer;
     }
 
@@ -100,65 +101,23 @@ public final class SsEndpointCompanionDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return String.format(
-            "SuperSpeed Endpoint Companion Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  bMaxBurst %16s%n" +
-            "  bmAttributes %13d%n" +
-            "  wBytesPerInterval %8d%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.bMaxBurst() & 0xFF,
-            this.bmAttributes() & 0xFF,
-            this.wBytesPerInterval() & 0xFFFF);
+                "SuperSpeed Endpoint Companion Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  bMaxBurst %16s%n" +
+                        "  bmAttributes %13d%n" +
+                        "  wBytesPerInterval %8d%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.bMaxBurst() & 0xFF,
+                this.bmAttributes() & 0xFF,
+                this.wBytesPerInterval() & 0xFFFF);
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bMaxBurst())
-            .append(this.bmAttributes())
-            .append(this.wBytesPerInterval())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final SsEndpointCompanionDescriptor other =
-            (SsEndpointCompanionDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bMaxBurst(), other.bMaxBurst())
-            .append(this.bmAttributes(), other.bmAttributes())
-            .append(this.wBytesPerInterval(), other.wBytesPerInterval())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

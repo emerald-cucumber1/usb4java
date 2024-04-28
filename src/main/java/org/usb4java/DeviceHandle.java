@@ -18,20 +18,27 @@
 
 package org.usb4java;
 
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Structure representing a handle on a USB device.
- *
+ * <p>
  * This is an opaque type for which you are only ever provided with a pointer,
  * usually originating from {@link LibUsb#open(Device, DeviceHandle)}.
- *
+ * <p>
  * A device handle is used to perform I/O and other operations. When finished
  * with a device handle, you should call {@link LibUsb#close(DeviceHandle)}.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class DeviceHandle
-{
-    /** The native pointer to the device handle structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class DeviceHandle {
+
+    /**
+     * The native pointer to the device handle structure.
+     */
     private long deviceHandlePointer;
 
     /**
@@ -39,8 +46,8 @@ public final class DeviceHandle
      * {@link LibUsb#open(Device, DeviceHandle)} before passing it to any
      * other method.
      */
-    public DeviceHandle()
-    {
+    @Contract(pure = true)
+    public DeviceHandle() {
         // Empty
     }
 
@@ -49,48 +56,14 @@ public final class DeviceHandle
      *
      * @return The native pointer to the device handle structure.
      */
-    public long getPointer()
-    {
+    @Contract(pure = true)
+    public long getPointer() {
         return this.deviceHandlePointer;
     }
 
+    @Contract(pure = true)
     @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result) + (int) (this.deviceHandlePointer ^ 
-            (this.deviceHandlePointer >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (this.getClass() != obj.getClass())
-        {
-            return false;
-        }
-        final DeviceHandle other = (DeviceHandle) obj;
-        if (this.deviceHandlePointer != other.deviceHandlePointer)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString()
-    {
-        return String.format("libusb device handle 0x%x",
-            this.deviceHandlePointer);
+    public @NotNull String toString() {
+        return String.format("libusb device handle 0x%x", this.deviceHandlePointer);
     }
 }

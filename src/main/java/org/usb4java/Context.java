@@ -18,6 +18,10 @@
 
 package org.usb4java;
 
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Structure representing a libusb session. The concept of individual libusb
  * sessions allows for your program to use two libraries (or dynamically load
@@ -35,6 +39,7 @@ package org.usb4java;
  *
  * @author Klaus Reimer (k@ailis.de)
  */
+@EqualsAndHashCode(doNotUseGetters = true)
 public final class Context
 {
     /** The native pointer to the context structure. */
@@ -44,6 +49,7 @@ public final class Context
      * Constructs a new libusb context. Must be passed to
      * {@link LibUsb#init(Context)} before passing it to any other method.
      */
+    @Contract(pure = true)
     public Context()
     {
         // Empty
@@ -54,46 +60,15 @@ public final class Context
      *
      * @return The native pointer to the context structure.
      */
+    @Contract(pure = true)
     public long getPointer()
     {
         return this.contextPointer;
     }
 
+    @Contract(pure = true)
     @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result)
-            + (int) (this.contextPointer ^ (this.contextPointer >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (this.getClass() != obj.getClass())
-        {
-            return false;
-        }
-        final Context other = (Context) obj;
-        if (this.contextPointer != other.contextPointer)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString()
+    public @NotNull String toString()
     {
         return String.format("libusb context 0x%x", this.contextPointer);
     }

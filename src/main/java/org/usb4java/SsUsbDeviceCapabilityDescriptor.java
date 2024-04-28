@@ -18,32 +18,34 @@
 
 package org.usb4java;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A structure representing the SuperSpeed USB Device Capability descriptor.
  * This descriptor is documented in section 9.6.2.2 of the USB 3.0
  * specification.
- *
+ * <p>
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class SsUsbDeviceCapabilityDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class SsUsbDeviceCapabilityDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long ssUsbDeviceCapabilityDescriptorPointer;
 
     /**
      * Constructs a new SuperSpeed USB Device Capability descriptor which can
      * be passed to the
-     * {@link LibUsb#getSsUsbDeviceCapabilityDescriptor(Context, 
+     * {@link LibUsb#getSsUsbDeviceCapabilityDescriptor(Context,
      * BosDevCapabilityDescriptor, SsUsbDeviceCapabilityDescriptor)}
      * method.
      */
-    public SsUsbDeviceCapabilityDescriptor()
-    {
+    public SsUsbDeviceCapabilityDescriptor() {
         // Empty
     }
 
@@ -52,8 +54,7 @@ public final class SsUsbDeviceCapabilityDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.ssUsbDeviceCapabilityDescriptorPointer;
     }
 
@@ -120,77 +121,29 @@ public final class SsUsbDeviceCapabilityDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return String.format(
-            "SuperSpeed USB Device Capability Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  bDevCapabilityType %7d%n" +
-            "  bmAttributes %13s%n" +
-            "  wSpeedSupported %10d%n" +
-            "  bFunctionalitySupport %4d%n" +
-            "  bU1DevExitLat %12d%n" +
-            "  bU2DevExitLat %12d%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.bDevCapabilityType() & 0xFF,
-            String.format("0x%02x", this.bmAttributes() & 0xFF),
-            this.wSpeedSupported() & 0xFFFF,
-            this.bFunctionalitySupport() & 0xFF,
-            this.bU1DevExitLat() & 0xFF,
-            this.bU2DevExitLat() & 0xFFFF);
+                "SuperSpeed USB Device Capability Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  bDevCapabilityType %7d%n" +
+                        "  bmAttributes %13s%n" +
+                        "  wSpeedSupported %10d%n" +
+                        "  bFunctionalitySupport %4d%n" +
+                        "  bU1DevExitLat %12d%n" +
+                        "  bU2DevExitLat %12d%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.bDevCapabilityType() & 0xFF,
+                String.format("0x%02x", this.bmAttributes() & 0xFF),
+                this.wSpeedSupported() & 0xFFFF,
+                this.bFunctionalitySupport() & 0xFF,
+                this.bU1DevExitLat() & 0xFF,
+                this.bU2DevExitLat() & 0xFFFF);
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bDevCapabilityType())
-            .append(this.bmAttributes())
-            .append(this.wSpeedSupported())
-            .append(this.bFunctionalitySupport())
-            .append(this.bU1DevExitLat())
-            .append(this.bU2DevExitLat())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final SsUsbDeviceCapabilityDescriptor other = 
-            (SsUsbDeviceCapabilityDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bDevCapabilityType(), other.bDevCapabilityType())
-            .append(this.bmAttributes(), other.bmAttributes())
-            .append(this.wSpeedSupported(), other.wSpeedSupported())
-            .append(this.bFunctionalitySupport(), other.bFunctionalitySupport())
-            .append(this.bU1DevExitLat(), other.bU1DevExitLat())
-            .append(this.bU2DevExitLat(), other.bU2DevExitLat())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

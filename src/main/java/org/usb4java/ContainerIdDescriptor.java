@@ -18,33 +18,35 @@
 
 package org.usb4java;
 
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.nio.ByteBuffer;
 
 /**
  * A structure representing the Container ID descriptor.
- *
+ * <p>
  * This descriptor is documented in section 9.6.2.3 of the USB 3.0
  * specification. All multiple-byte fields, except UUIDs, are represented in
  * host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class ContainerIdDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class ContainerIdDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long containerIdDescriptorPointer;
 
     /**
      * Constructs a new Container Id descriptor which can be passed to the
-     * {@link LibUsb#getContainerIdDescriptor(Context, 
+     * {@link LibUsb#getContainerIdDescriptor(Context,
      * BosDevCapabilityDescriptor, ContainerIdDescriptor)}
      * method.
      */
-    public ContainerIdDescriptor()
-    {
+    public ContainerIdDescriptor() {
         // Empty
     }
 
@@ -53,8 +55,7 @@ public final class ContainerIdDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.containerIdDescriptorPointer;
     }
 
@@ -98,65 +99,24 @@ public final class ContainerIdDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return String.format(
-            "Container ID Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  bDevCapabilityType %7d%n" +
-            "  bReserved %16d%n" +
-            "  ContainerID:%n%s%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.bDevCapabilityType() & 0xFF,
-            this.bReserved() & 0xFF,
-            DescriptorUtils.dump(this.containerId())
-                .replaceAll("(?m)^", "    "));
+                "Container ID Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  bDevCapabilityType %7d%n" +
+                        "  bReserved %16d%n" +
+                        "  ContainerID:%n%s%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.bDevCapabilityType() & 0xFF,
+                this.bReserved() & 0xFF,
+                DescriptorUtils.dump(this.containerId())
+                        .replaceAll("(?m)^", "    "));
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bDevCapabilityType())
-            .append(this.bReserved())
-            .append(this.containerId())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final ContainerIdDescriptor other = (ContainerIdDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bDevCapabilityType(), other.bDevCapabilityType())
-            .append(this.bReserved(), other.bReserved())
-            .append(this.containerId(), other.containerId())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

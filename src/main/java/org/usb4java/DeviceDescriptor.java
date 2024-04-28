@@ -18,36 +18,40 @@
 
 package org.usb4java;
 
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.nio.ByteBuffer;
 
 /**
  * A structure representing the standard USB device descriptor.
- *
+ * <p>
  * This descriptor is documented in section 9.6.1 of the USB 3.0 specification.
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class DeviceDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class DeviceDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long deviceDescriptorPointer;
 
-    /** The Java ByteBuffer which contains the descriptor structure. */
+    /**
+     * The Java ByteBuffer which contains the descriptor structure.
+     */
     private final ByteBuffer deviceDescriptorBuffer;
 
     /**
      * Constructs a new device descriptor which can be passed to the
      * {@link LibUsb#getDeviceDescriptor(Device, DeviceDescriptor)} method.
      */
-    public DeviceDescriptor()
-    {
+    public DeviceDescriptor() {
         // Assign new buffer.
         this.deviceDescriptorBuffer = BufferUtils.allocateByteBuffer(
-            LibUsb.deviceDescriptorStructSize());
+                LibUsb.deviceDescriptorStructSize());
     }
 
     /**
@@ -55,8 +59,7 @@ public final class DeviceDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.deviceDescriptorPointer;
     }
 
@@ -65,8 +68,7 @@ public final class DeviceDescriptor
      *
      * @return The descriptor structure buffer.
      */
-    public ByteBuffer getBuffer()
-    {
+    public ByteBuffer getBuffer() {
         return this.deviceDescriptorBuffer;
     }
 
@@ -179,91 +181,26 @@ public final class DeviceDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return this.dump(null);
     }
 
     /**
      * Returns a dump of this descriptor.
      *
-     * @param handle
-     *            The USB device handle for resolving string descriptors. If
-     *            null then no strings are resolved.
+     * @param handle The USB device handle for resolving string descriptors. If
+     *               null then no strings are resolved.
      * @return The descriptor dump.
      */
-    public String dump(final DeviceHandle handle)
-    {
-        final String sManufacturer = LibUsb.getStringDescriptor(handle,
-            this.iManufacturer());
-        final String sProduct = LibUsb.getStringDescriptor(handle,
-            this.iProduct());
-        final String sSerialNumber = LibUsb.getStringDescriptor(handle,
-            this.iSerialNumber());
-        return DescriptorUtils.dump(this, sManufacturer, sProduct,
-            sSerialNumber);
+    public String dump(final DeviceHandle handle) {
+        final String sManufacturer = LibUsb.getStringDescriptor(handle, this.iManufacturer());
+        final String sProduct = LibUsb.getStringDescriptor(handle, this.iProduct());
+        final String sSerialNumber = LibUsb.getStringDescriptor(handle, this.iSerialNumber());
+        return DescriptorUtils.dump(this, sManufacturer, sProduct, sSerialNumber);
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bcdUSB())
-            .append(this.bDeviceClass())
-            .append(this.bDeviceSubClass())
-            .append(this.bDeviceProtocol())
-            .append(this.bMaxPacketSize0())
-            .append(this.idVendor())
-            .append(this.idProduct())
-            .append(this.bcdDevice())
-            .append(this.iManufacturer())
-            .append(this.iProduct())
-            .append(this.iSerialNumber())
-            .append(this.bNumConfigurations())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (this.getClass() != obj.getClass())
-        {
-            return false;
-        }
-
-        final DeviceDescriptor other = (DeviceDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bcdUSB(), other.bcdUSB())
-            .append(this.bDeviceClass(), other.bDeviceClass())
-            .append(this.bDeviceSubClass(), other.bDeviceSubClass())
-            .append(this.bDeviceProtocol(), other.bDeviceProtocol())
-            .append(this.bMaxPacketSize0(), other.bMaxPacketSize0())
-            .append(this.idVendor(), other.idVendor())
-            .append(this.idProduct(), other.idProduct())
-            .append(this.bcdDevice(), other.bcdDevice())
-            .append(this.iManufacturer(), other.iManufacturer())
-            .append(this.iProduct(), other.iProduct())
-            .append(this.iSerialNumber(), other.iSerialNumber())
-            .append(this.bNumConfigurations(), other.bNumConfigurations())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

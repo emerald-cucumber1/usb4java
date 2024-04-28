@@ -11,8 +11,6 @@ import java.lang.reflect.Constructor;
 import java.nio.ByteBuffer;
 
 import org.junit.Test;
-import org.usb4java.DescriptorUtils;
-import org.usb4java.LibUsb;
 
 /**
  * Tests the {@link DescriptorUtils} class.
@@ -55,15 +53,15 @@ public class DescriptorUtilsTest
     }
 
     /**
-     * Tests the {@link DescriptorUtils#getSynchTypeName(byte)} method.
+     * Tests the {@link DescriptorUtils#getSyncTypeName(byte)} method.
      */
     @Test
-    public void testGetSynchTypeName()
+    public void testGetSyncTypeName()
     {
-        assertEquals("None", DescriptorUtils.getSynchTypeName((byte) 0));
-        assertEquals("Asynchronous", DescriptorUtils.getSynchTypeName((byte) 4));
-        assertEquals("Adaptive", DescriptorUtils.getSynchTypeName((byte) 8));
-        assertEquals("Synchronous", DescriptorUtils.getSynchTypeName((byte) 12));
+        assertEquals("None", DescriptorUtils.getSyncTypeName((byte) 0));
+        assertEquals("Asynchronous", DescriptorUtils.getSyncTypeName((byte) 4));
+        assertEquals("Adaptive", DescriptorUtils.getSyncTypeName((byte) 8));
+        assertEquals("Synchronous", DescriptorUtils.getSyncTypeName((byte) 12));
     }
 
     /**

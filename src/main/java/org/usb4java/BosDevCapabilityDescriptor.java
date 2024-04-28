@@ -18,30 +18,32 @@
 
 package org.usb4java;
 
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.nio.ByteBuffer;
 
 /**
  * A generic representation of a BOS Device Capability descriptor.
- *
+ * <p>
  * It is advised to check bDevCapabilityType and call the matching
  * get*Descriptor method to get a structure fully matching the type.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class BosDevCapabilityDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class BosDevCapabilityDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long bosDevCapabilityDescriptorPointer;
 
     /**
      * Package-private constructor to prevent manual instantiation. BOS device
      * capability descriptors are always created by JNI.
      */
-    BosDevCapabilityDescriptor()
-    {
+    BosDevCapabilityDescriptor() {
         // Empty
     }
 
@@ -50,8 +52,7 @@ public final class BosDevCapabilityDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.bosDevCapabilityDescriptorPointer;
     }
 
@@ -88,62 +89,22 @@ public final class BosDevCapabilityDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return String.format(
-            "BOS Device Capability Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  bDevCapabilityType %7s%n" +
-            "  devCapabilityData:%n%s%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.bDevCapabilityType() & 0xFF,
-            DescriptorUtils.dump(this.devCapabilityData())
-                .replaceAll("(?m)^", "    "));
+                "BOS Device Capability Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  bDevCapabilityType %7s%n" +
+                        "  devCapabilityData:%n%s%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.bDevCapabilityType() & 0xFF,
+                DescriptorUtils.dump(this.devCapabilityData())
+                        .replaceAll("(?m)^", "    "));
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bDevCapabilityType())
-            .append(this.devCapabilityData())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final BosDevCapabilityDescriptor other = 
-            (BosDevCapabilityDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bDevCapabilityType(), other.bDevCapabilityType())
-            .append(this.devCapabilityData(), other.devCapabilityData()).
-            isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

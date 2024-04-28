@@ -18,31 +18,35 @@
 
 package org.usb4java;
 
-import java.nio.ByteBuffer;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.nio.ByteBuffer;
 
 /**
  * A structure representing the standard USB configuration descriptor.
- *
+ * <p>
  * This descriptor is documented in section 9.6.3 of the USB 3.0 specification.
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class ConfigDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class ConfigDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long configDescriptorPointer;
 
     /**
      * Constructs a new config descriptor which can be passed to the
-     * {@link LibUsb#getConfigDescriptor(Device, byte, ConfigDescriptor)} 
+     * {@link LibUsb#getConfigDescriptor(Device, byte, ConfigDescriptor)}
      * method.
      */
-    public ConfigDescriptor()
-    {
+    @Contract(pure = true)
+    public ConfigDescriptor() {
         // Empty
     }
 
@@ -51,57 +55,56 @@ public final class ConfigDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.configDescriptorPointer;
     }
 
     /**
      * Returns the size of this descriptor (in bytes).
-     * 
-     * @return The size of this descriptor (in bytes). 
+     *
+     * @return The size of this descriptor (in bytes).
      */
     public native byte bLength();
 
     /**
      * Returns the descriptor type. Will have value {@link LibUsb#DT_CONFIG}
-     * in this context. 
-     * 
+     * in this context.
+     *
      * @return The descriptor type.
      */
     public native byte bDescriptorType();
 
     /**
      * Returns the total length of data returned for this configuration.
-     * 
+     *
      * @return The total length of data.
      */
     public native short wTotalLength();
 
     /**
      * Returns the number of interfaces supported by this configuration.
-     * 
+     *
      * @return The number of supported interfaces.
-     */ 
+     */
     public native byte bNumInterfaces();
 
     /**
      * Returns the identifier value for this configuration.
-     * 
+     *
      * @return The identifier value.
      */
     public native byte bConfigurationValue();
 
     /**
      * Returns the index of string descriptor describing this configuration.
-     * 
+     *
      * @return The string descriptor index.
      */
     public native byte iConfiguration();
 
     /**
      * Returns the configuration characteristics.
-     * 
+     *
      * @return The configuration characteristics.
      */
     public native byte bmAttributes();
@@ -111,7 +114,7 @@ public final class ConfigDescriptor
      * configuration when the device is fully operation. Expressed in units
      * of 2 mA when the device is operating in high-speed mode and in units
      * of 8 mA when the device is operating in super-speed mode.
-     * 
+     *
      * @return The maximum power consumption.
      */
     public native byte bMaxPower();
@@ -125,7 +128,7 @@ public final class ConfigDescriptor
 
     /**
      * Extra descriptors.
-     *
+     * <p>
      * If libusb encounters unknown interface descriptors, it will store them
      * here, should you wish to parse them.
      *
@@ -145,81 +148,27 @@ public final class ConfigDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         final StringBuilder builder = new StringBuilder();
 
         builder.append(String.format(
-            "%s" +
-            "  extralen %17d%n" +
-            "  extra:%n" +
-            "%s",
-            DescriptorUtils.dump(this),
-            this.extraLength(),
-            DescriptorUtils.dump(this.extra()).replaceAll("(?m)^", "    ")));
+                "%s" +
+                        "  extralen %17d%n" +
+                        "  extra:%n" +
+                        "%s",
+                DescriptorUtils.dump(this),
+                this.extraLength(),
+                DescriptorUtils.dump(this.extra()).replaceAll("(?m)^", "    ")));
 
-        for (final Interface iface : this.iface())
-        {
-            builder.append(String.format("%n") + iface.dump());
+        for (final Interface iface : this.iface()) {
+            builder.append(String.format("%n")).append(iface.dump());
         }
 
         return builder.toString();
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.wTotalLength())
-            .append(this.bNumInterfaces())
-            .append(this.bConfigurationValue())
-            .append(this.iConfiguration())
-            .append(this.bmAttributes())
-            .append(this.bMaxPower())
-            .append(this.iface())
-            .append(this.extra())
-            .append(this.extraLength())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (this.getClass() != obj.getClass())
-        {
-            return false;
-        }
-
-        final ConfigDescriptor other = (ConfigDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.wTotalLength(), other.wTotalLength())
-            .append(this.bNumInterfaces(), other.bNumInterfaces())
-            .append(this.bConfigurationValue(), other.bConfigurationValue())
-            .append(this.iConfiguration(), other.iConfiguration())
-            .append(this.bmAttributes(), other.bmAttributes())
-            .append(this.bMaxPower(), other.bMaxPower())
-            .append(this.iface(), other.iface())
-            .append(this.extra(), other.extra())
-            .append(this.extraLength(), other.extraLength())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

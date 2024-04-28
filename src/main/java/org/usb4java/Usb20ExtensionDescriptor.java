@@ -18,30 +18,32 @@
 
 package org.usb4java;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A structure representing the USB 2.0 Extension descriptor. This descriptor is
  * documented in section 9.6.2.1 of the USB 3.0 specification.
- *
+ * <p>
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class Usb20ExtensionDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class Usb20ExtensionDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long usb20ExtensionDescriptorPointer;
 
     /**
      * Constructs a new USB 2.0 Extension descriptor which can be passed to the
-     * {@link LibUsb#getUsb20ExtensionDescriptor(Context, 
+     * {@link LibUsb#getUsb20ExtensionDescriptor(Context,
      * BosDevCapabilityDescriptor, Usb20ExtensionDescriptor)}
      * method.
      */
-    public Usb20ExtensionDescriptor()
-    {
+    public Usb20ExtensionDescriptor() {
         // Empty
     }
 
@@ -50,8 +52,7 @@ public final class Usb20ExtensionDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.usb20ExtensionDescriptorPointer;
     }
 
@@ -88,60 +89,21 @@ public final class Usb20ExtensionDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         return String.format(
-            "USB 2.0 Extension Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  bDevCapabilityType %7d%n" +
-            "  bmAttributes %13s%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.bDevCapabilityType() & 0xFF,
-            String.format("0x%08x", this.bmAttributes()));
+                "USB 2.0 Extension Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  bDevCapabilityType %7d%n" +
+                        "  bmAttributes %13s%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.bDevCapabilityType() & 0xFF,
+                String.format("0x%08x", this.bmAttributes()));
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.bDevCapabilityType())
-            .append(this.bmAttributes())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final Usb20ExtensionDescriptor other = (Usb20ExtensionDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.bDevCapabilityType(), other.bDevCapabilityType())
-            .append(this.bmAttributes(), other.bmAttributes())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }

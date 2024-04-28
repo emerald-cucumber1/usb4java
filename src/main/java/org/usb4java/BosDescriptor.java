@@ -18,28 +18,30 @@
 
 package org.usb4java;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A structure representing the Binary Device Object Store (BOS) descriptor.
- *
+ * <p>
  * This descriptor is documented in section 9.6.2 of the USB 3.0 specification.
  * All multiple-byte fields are represented in host-endian format.
  *
  * @author Klaus Reimer (k@ailis.de)
  */
-public final class BosDescriptor
-{
-    /** The native pointer to the descriptor structure. */
+@EqualsAndHashCode(doNotUseGetters = true)
+public final class BosDescriptor {
+
+    /**
+     * The native pointer to the descriptor structure.
+     */
     private long bosDescriptorPointer;
 
     /**
      * Constructs a new BOS descriptor which can be passed to the
      * {@link LibUsb#getBosDescriptor(DeviceHandle, BosDescriptor)} method.
      */
-    public BosDescriptor()
-    {
+    public BosDescriptor() {
         // Empty
     }
 
@@ -48,8 +50,7 @@ public final class BosDescriptor
      *
      * @return The native pointer.
      */
-    public long getPointer()
-    {
+    public long getPointer() {
         return this.bosDescriptorPointer;
     }
 
@@ -93,23 +94,21 @@ public final class BosDescriptor
      *
      * @return The descriptor dump.
      */
-    public String dump()
-    {
+    public String dump() {
         final StringBuilder builder = new StringBuilder();
 
         builder.append(String.format(
-            "BOS Descriptor:%n" +
-            "  bLength %18d%n" +
-            "  bDescriptorType %10d%n" +
-            "  wTotalLength %13s%n" +
-            "  bNumDeviceCaps %11s%n",
-            this.bLength() & 0xFF,
-            this.bDescriptorType() & 0xFF,
-            this.wTotalLength() & 0xFFFF,
-            this.bNumDeviceCaps() & 0xFF));
+                "BOS Descriptor:%n" +
+                        "  bLength %18d%n" +
+                        "  bDescriptorType %10d%n" +
+                        "  wTotalLength %13s%n" +
+                        "  bNumDeviceCaps %11s%n",
+                this.bLength() & 0xFF,
+                this.bDescriptorType() & 0xFF,
+                this.wTotalLength() & 0xFFFF,
+                this.bNumDeviceCaps() & 0xFF));
 
-        for (final BosDevCapabilityDescriptor descriptor : this.devCapability())
-        {
+        for (final BosDevCapabilityDescriptor descriptor : this.devCapability()) {
             builder.append(descriptor.dump().replaceAll("(?m)^", "  "));
         }
 
@@ -117,47 +116,7 @@ public final class BosDescriptor
     }
 
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder()
-            .append(this.bLength())
-            .append(this.bDescriptorType())
-            .append(this.wTotalLength())
-            .append(this.bNumDeviceCaps())
-            .append(this.devCapability())
-            .toHashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj)
-    {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj == this)
-        {
-            return true;
-        }
-        if (obj.getClass() != this.getClass())
-        {
-            return false;
-        }
-
-        final BosDescriptor other = (BosDescriptor) obj;
-
-        return new EqualsBuilder()
-            .append(this.bLength(), other.bLength())
-            .append(this.bDescriptorType(), other.bDescriptorType())
-            .append(this.wTotalLength(), other.wTotalLength())
-            .append(this.bNumDeviceCaps(), other.bNumDeviceCaps())
-            .append(this.devCapability(), other.devCapability())
-            .isEquals();
-    }
-
-    @Override
-    public String toString()
-    {
+    public @NotNull String toString() {
         return this.dump();
     }
 }
